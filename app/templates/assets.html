@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container my-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row align-items-end">
+                <div class="col-md-3 mb-3">
+                    <label for="id_asset_name">Asset Name:</label>
+                    <select id="id_asset_name" name="asset_name" class="form-control select2">
+                        {% for value, label in form.asset_name.field.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="id_quantity">Quantity:</label>
+                    <input type="number" id="id_quantity" name="quantity" class="form-control" min="1" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="id_average_cost">Average Cost:</label>
+                    <input type="number" id="id_average_cost" name="average_cost" class="form-control" step="0.01" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Add</button>
+                </div>
+            </div>
+        </form>
+
+        <ul class="list-group">
+            {% for asset in asset_values %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>Name:</strong> {{ asset.name }} |
+                        <strong>Quantity:</strong> {{ asset.quantity }} |
+                        <strong>Average Cost:</strong> {{ asset.average_cost }} |
+                        <strong>Unit Value:</strong> {{ asset.unit_value|floatformat:2 }} |
+                        <strong>Total Value:</strong> {{ asset.total_value|floatformat:2 }}
+                    </span>
+                    <form method="post" action="{% url 'delete_asset' asset.id %}" class="ml-3" onsubmit="return confirm('Are you sure you want to delete this asset?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="my-4">Total Current Value: {{ total_current_value|floatformat:2 }}</h2>
+    </div>
+{% endblock %}
