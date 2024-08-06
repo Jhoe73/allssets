@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['allssets.onrender.com']
 
+CSRF_TRUSTED_ORIGINS = [
+    'allssets.onrender.com'
+]
+
 # Application definition
 
 INSTALLED_APPS = [
